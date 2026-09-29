@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>АЮИ МВД РК — 3D-осмотр</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;font-family:Arial,Helvetica,sans-serif;background:#071d38;color:#fff;overflow:hidden}
+.header{position:fixed;z-index:20;left:16px;right:16px;top:16px;display:flex;justify-content:space-between;gap:12px;align-items:center;padding:14px 18px;background:rgba(255,255,255,.95);color:#173b62;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.2)}
+.header b{font-size:15px}.header span{display:block;font-size:12px;color:#6e7b89;margin-top:3px}
+.back{color:#fff;background:#d6a532;text-decoration:none;padding:10px 13px;border-radius:10px;font-weight:800;font-size:12px}
+.stage{position:absolute;inset:0;perspective:1100px;background:linear-gradient(#a6c7e3 0 54%,#78956f 54% 100%)}
+.world{position:absolute;left:50%;top:56%;width:860px;height:540px;transform:translate(-50%,-50%) rotateX(58deg) rotateZ(-8deg);transform-style:preserve-3d;cursor:grab;transition:transform .05s linear}
+.world:active{cursor:grabbing}
+.ground{position:absolute;left:0;top:0;width:860px;height:540px;background:linear-gradient(135deg,#88a57d,#68865f);border:3px solid rgba(255,255,255,.25);box-shadow:inset 0 0 0 14px rgba(255,255,255,.05);transform:translateZ(-6px)}
+.road{position:absolute;background:#8e9399;box-shadow:inset 0 0 0 2px rgba(255,255,255,.15)}
+.road.main{left:330px;top:0;width:120px;height:540px}
+.road.side{left:120px;top:280px;width:620px;height:72px}
+.building{position:absolute;left:250px;top:110px;width:360px;height:250px;transform-style:preserve-3d}
+.front,.side,.roof{position:absolute}
+.front{left:0;top:0;width:360px;height:250px;background:linear-gradient(180deg,#eef2f5,#cfd8e2);border:4px solid #456886;box-shadow:0 16px 0 #274a68}
+.side{left:360px;top:0;width:95px;height:250px;background:#b9c7d3;border:4px solid #456886;transform-origin:left center;transform:rotateY(-90deg)}
+.roof{left:-6px;top:-28px;width:372px;height:28px;background:#294f71;border:4px solid #183b59;transform:skewX(-12deg)}
+.window{position:absolute;top:38px;width:44px;height:52px;background:linear-gradient(#83bddc,#4b87ae);border:3px solid #365b78;box-shadow:inset 0 0 0 2px rgba(255,255,255,.22)}
+.door{position:absolute;left:147px;bottom:0;width:66px;height:110px;background:#284d6d;border:4px solid #193b57}
+.step{position:absolute;left:122px;bottom:-18px;width:116px;height:18px;background:#d9a52d;border-radius:2px}
+.flagpole{position:absolute;left:170px;top:-105px;width:7px;height:106px;background:#d8ad3b}
+.flag{position:absolute;left:7px;top:6px;width:84px;height:48px;background:linear-gradient(#56a7d7 0 50%,#f3d05c 50%);border:2px solid #c89522}
+.sign{position:absolute;left:80px;top:14px;width:200px;padding:8px;text-align:center;background:rgba(255,255,255,.92);color:#173b62;border:2px solid #3e6482;border-radius:7px;font-size:13px;font-weight:900}
+.tower{position:absolute;left:648px;top:155px;width:92px;height:150px;background:#d4dde5;border:4px solid #456886;transform:translateZ(30px)}
+.tower .clock{position:absolute;left:18px;top:20px;width:50px;height:50px;border-radius:50%;background:#fff;border:4px solid #40637e}
+.clock:before{content:"";position:absolute;left:23px;top:8px;width:4px;height:20px;background:#31506a;transform-origin:bottom;transform:rotate(25deg)}
+.clock:after{content:"";position:absolute;left:23px;top:22px;width:18px;height:4px;background:#31506a;transform-origin:left}
+.tree{position:absolute;width:20px;height:62px;background:#6e4f35;border-radius:5px}
+.tree:after{content:"";position:absolute;left:-24px;top:-32px;width:68px;height:68px;background:#3f704d;border-radius:50%;box-shadow:0 0 0 12px rgba(50,100,68,.2)}
+.t1{left:90px;top:80px}.t2{left:90px;top:405px}.t3{left:735px;top:390px}.t4{left:760px;top:70px}
+.hotspot{position:absolute;z-index:5;width:18px;height:18px;background:#d6a532;border:4px solid #fff;border-radius:50%;box-shadow:0 0 0 7px rgba(214,165,50,.25);cursor:pointer}
+.hotspot:after{content:"";position:absolute;left:26px;top:-6px;white-space:nowrap;background:rgba(7,29,56,.9);color:#fff;padding:7px 9px;border-radius:8px;font-size:11px;font-weight:700;opacity:0;pointer-events:none;transition:.15s}
+.hotspot:hover:after{opacity:1}
+.h1{left:425px;top:215px}.h1:after{content:"Главный корпус"}
+.h2{left:675px;top:210px}.h2:after{content:"Учебная зона"}
+.h3{left:180px;top:330px}.h3:after{content:"Территория института"}
+.panel{position:fixed;z-index:20;left:16px;bottom:16px;max-width:440px;padding:12px 15px;background:rgba(7,29,56,.88);border:1px solid rgba(255,255,255,.15);border-radius:14px;font-size:12px;line-height:1.45}
+.panel b{font-size:13px}
+@media(max-width:900px){.world{width:720px;height:460px;transform:translate(-50%,-50%) rotateX(60deg) rotateZ(-8deg) scale(.84)}}
+</style>
+</head>
+<body>
+<div class="header">
+  <div><b>ВИРТУАЛЬНЫЙ 3D-ОСМОТР</b><span>Актюбинский юридический институт МВД РК имени М. Букенбаева</span></div>
+  <a class="back" href="links.html">← РЕСУРСЫ</a>
+</div>
+
+<div class="stage">
+  <div class="world" id="world">
+    <div class="ground"></div>
+    <div class="road main"></div><div class="road side"></div>
+    <div class="building">
+      <div class="front"></div><div class="side"></div><div class="roof"></div>
+      <div class="sign">АКТЮБИНСКИЙ ЮРИДИЧЕСКИЙ ИНСТИТУТ МВД РК</div>
+      <div class="door"></div><div class="step"></div><div class="flagpole"></div><div class="flag"></div>
+      <div class="window" style="left:28px"></div><div class="window" style="left:86px"></div>
+      <div class="window" style="left:228px"></div><div class="window" style="left:286px"></div>
+    </div>
+    <div class="tower"><div class="clock"></div></div>
+    <div class="tree t1"></div><div class="tree t2"></div><div class="tree t3"></div><div class="tree t4"></div>
+    <div class="hotspot h1"></div><div class="hotspot h2"></div><div class="hotspot h3"></div>
+  </div>
+</div>
+
+<div class="panel"><b>Демо-вариант</b><br>Потяни сцену мышью или пальцем, чтобы осмотреть макет под разными углами. Это концептуальная 3D-визуализация, а не точная цифровая копия здания.</div>
+
+<script>
+const world=document.getElementById('world');
+let down=false, sx=0, sy=0, rz=-8, rx=58;
+world.addEventListener('pointerdown',e=>{down=true;sx=e.clientX;sy=e.clientY;world.setPointerCapture(e.pointerId)});
+world.addEventListener('pointerup',()=>down=false);
+world.addEventListener('pointercancel',()=>down=false);
+world.addEventListener('pointermove',e=>{
+  if(!down)return;
+  rz += (e.clientX-sx)*0.22;
+  rx -= (e.clientY-sy)*0.12;
+  rx=Math.max(48,Math.min(72,rx));
+  sx=e.clientX;sy=e.clientY;
+  world.style.transform=`translate(-50%,-50%) rotateX(${rx}deg) rotateZ(${rz}deg)`;
+});
+</script>
+</body>
+</html>

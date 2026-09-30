@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>АЮИ МВД РК — Видеообзор института</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;font-family:Arial,sans-serif;background:linear-gradient(145deg,#071d38,#123f6b);color:#102d4d;padding:22px}
+.wrap{width:100%;max-width:1000px;margin:0 auto}
+.topbar{display:flex;align-items:center;gap:14px;margin-bottom:16px}
+.back{color:#fff;text-decoration:none;font-weight:800;font-size:14px;padding:9px 12px;border:1px solid rgba(255,255,255,.28);border-radius:10px;background:rgba(255,255,255,.08)}
+.lang{display:flex;gap:6px;margin-left:auto}.lang-btn{border:1px solid rgba(255,255,255,.35);background:transparent;color:#fff;border-radius:9px;padding:8px 10px;font-size:12px;font-weight:800;cursor:pointer}.lang-btn.active{background:#fff;color:#173b62;border-color:#fff}
+.card{background:#fff;border-radius:24px;padding:26px;box-shadow:0 15px 45px rgba(0,0,0,.25)}
+.kicker{color:#d5a329;font-size:12px;font-weight:900;letter-spacing:1.6px;text-transform:uppercase;margin-bottom:8px}
+h1{font-size:28px;line-height:1.25;margin:0 0 8px;color:#102d4d}.desc{color:#697586;line-height:1.55;margin:0 0 20px}
+.video-shell{position:relative;width:100%;aspect-ratio:16/9;background:#071d38;border-radius:18px;overflow:hidden;box-shadow:0 8px 26px rgba(7,29,56,.2)}
+video{width:100%;height:100%;display:block;background:#071d38;object-fit:contain}
+.placeholder{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:28px;background:linear-gradient(rgba(7,29,56,.76),rgba(7,29,56,.86)),url('background.jpg') center/cover no-repeat;color:#fff}
+.placeholder.hidden{display:none}.play{width:68px;height:68px;border-radius:50%;background:#d5a329;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;box-shadow:0 8px 20px rgba(0,0,0,.25)}.play:before{content:'';border-left:20px solid #fff;border-top:12px solid transparent;border-bottom:12px solid transparent;margin-left:5px}
+.placeholder b{display:block;font-size:20px;margin-bottom:8px}.placeholder span{font-size:14px;line-height:1.5;opacity:.9}
+.note{margin-top:18px;padding:15px 16px;border-radius:14px;background:#f7f9fb;border:1px solid #dce4ec;color:#5e6b78;font-size:14px;line-height:1.55}
+.filename{font-family:Consolas,monospace;color:#173b62;font-weight:700}
+@media(max-width:650px){body{padding:12px}.card{padding:18px;border-radius:18px}h1{font-size:23px}.topbar{flex-wrap:wrap}.lang{margin-left:auto}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <a class="back" href="links.html" data-i18n="back">← РЕСУРСЫ</a>
+    <div class="lang"><button class="lang-btn" data-lang="ru" type="button">RU</button><button class="lang-btn" data-lang="kk" type="button">ҚАЗ</button></div>
+  </div>
+  <div class="card">
+    <div class="kicker" data-i18n="kicker">Актюбинский юридический институт МВД Республики Казахстан имени М. Букенбаева</div>
+    <h1 data-i18n="title">Видеообзор института</h1>
+    <p class="desc" data-i18n="desc">Короткометражный обзорный ролик об институте, учебной инфраструктуре и территории.</p>
+    <div class="video-shell">
+      <video id="reviewVideo" controls preload="metadata" playsinline poster="background.jpg">
+        <source src="institute-review.mp4" type="video/mp4"/>
+      </video>
+      <div class="placeholder" id="placeholder">
+        <div><div class="play"></div><b data-i18n="placeholderTitle">Место для обзорного видео</b><span data-i18n="placeholderText">Обзорный ролик института будет доступен здесь.</span></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+<script>
+const L={
+ ru:{back:'← РЕСУРСЫ',kicker:'Актюбинский юридический институт МВД Республики Казахстан имени М. Букенбаева',title:'Видеообзор института',desc:'Короткометражный обзорный ролик об институте, учебной инфраструктуре и территории.',placeholderTitle:'Место для обзорного видео',placeholderText:'Обзорный ролик института будет доступен здесь.'},
+ kk:{back:'← РЕСУРСТАР',kicker:'Қазақстан Республикасы ІІМ М. Бөкенбаев атындағы Ақтөбе заң институты',title:'Институтқа бейнешолу',desc:'Институт, оқу инфрақұрылымы және аумағы туралы қысқаметражды шолу бейнеролигі.',placeholderTitle:'Шолу бейнесіне арналған орын',placeholderText:'Институттың шолу бейнеролигі осы жерде қолжетімді болады.'}
+};
+function setLang(lang){localStorage.setItem('siteLanguage',lang);document.documentElement.lang=lang==='kk'?'kk':'ru';document.querySelectorAll('[data-i18n]').forEach(e=>e.textContent=L[lang][e.dataset.i18n]);document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active',b.dataset.lang===lang));document.title=lang==='kk'?'Ақтөбе заң институты — Бейнешолу':'АЮИ МВД РК — Видеообзор института'}
+document.querySelectorAll('.lang-btn').forEach(b=>b.addEventListener('click',()=>setLang(b.dataset.lang)));setLang(localStorage.getItem('siteLanguage')||'ru');
+const v=document.getElementById('reviewVideo'),p=document.getElementById('placeholder');
+v.addEventListener('loadedmetadata',()=>p.classList.add('hidden'));
+v.addEventListener('canplay',()=>p.classList.add('hidden'));
+v.addEventListener('error',()=>p.classList.remove('hidden'));
+</script>
+</body>
+</html>

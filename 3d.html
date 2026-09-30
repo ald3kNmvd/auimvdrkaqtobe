@@ -1,8 +1,9 @@
-<!doctype html>
+<!DOCTYPE html>
+
 <html lang="ru">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
 <title>АЮИ МВД РК — 3D-осмотр</title>
 <style>
 *{box-sizing:border-box}
@@ -44,33 +45,33 @@ html,body{margin:0;height:100%;font-family:Arial,Helvetica,sans-serif;background
 .panel{position:fixed;z-index:20;left:16px;bottom:16px;max-width:440px;padding:12px 15px;background:rgba(7,29,56,.88);border:1px solid rgba(255,255,255,.15);border-radius:14px;font-size:12px;line-height:1.45}
 .panel b{font-size:13px}
 @media(max-width:900px){.world{width:720px;height:460px;transform:translate(-50%,-50%) rotateX(60deg) rotateZ(-8deg) scale(.84)}}
+
+.lang3d{display:flex;gap:6px;margin-left:auto}.lang3d .lang-btn{border:1px solid #d6dce5;background:#fff;color:#173b62;border-radius:9px;padding:8px 9px;font-size:11px;font-weight:800;cursor:pointer}.lang3d .lang-btn.active{background:#173b62;color:#fff;border-color:#173b62}@media(max-width:650px){.header{align-items:flex-start;flex-wrap:wrap}.lang3d{order:3;width:100%;justify-content:flex-end}}
+.h1:after{content:var(--h1,"Главный корпус")}.h2:after{content:var(--h2,"Учебная зона")}.h3:after{content:var(--h3,"Территория института")}
 </style>
 </head>
 <body>
 <div class="header">
-  <div><b>ВИРТУАЛЬНЫЙ 3D-ОСМОТР</b><span>Актюбинский юридический институт МВД РК имени М. Букенбаева</span></div>
-  <a class="back" href="links.html">← РЕСУРСЫ</a>
+<div class="lang3d"><button class="lang-btn" data-lang="ru" type="button">RU</button><button class="lang-btn" data-lang="kk" type="button">ҚАЗ</button></div><div><b data-i18n="tourHead">ВИРТУАЛЬНЫЙ 3D-ОСМОТР</b><span data-i18n="fullName">Актюбинский юридический институт МВД РК имени М. Букенбаева</span></div>
+<a class="back" data-i18n="back" href="links.html">← РЕСУРСЫ</a>
 </div>
-
 <div class="stage">
-  <div class="world" id="world">
-    <div class="ground"></div>
-    <div class="road main"></div><div class="road side"></div>
-    <div class="building">
-      <div class="front"></div><div class="side"></div><div class="roof"></div>
-      <div class="sign">АКТЮБИНСКИЙ ЮРИДИЧЕСКИЙ ИНСТИТУТ МВД РК</div>
-      <div class="door"></div><div class="step"></div><div class="flagpole"></div><div class="flag"></div>
-      <div class="window" style="left:28px"></div><div class="window" style="left:86px"></div>
-      <div class="window" style="left:228px"></div><div class="window" style="left:286px"></div>
-    </div>
-    <div class="tower"><div class="clock"></div></div>
-    <div class="tree t1"></div><div class="tree t2"></div><div class="tree t3"></div><div class="tree t4"></div>
-    <div class="hotspot h1"></div><div class="hotspot h2"></div><div class="hotspot h3"></div>
-  </div>
+<div class="world" id="world">
+<div class="ground"></div>
+<div class="road main"></div><div class="road side"></div>
+<div class="building">
+<div class="front"></div><div class="side"></div><div class="roof"></div>
+<div class="sign" data-i18n="sign">АКТЮБИНСКИЙ ЮРИДИЧЕСКИЙ ИНСТИТУТ МВД РК</div>
+<div class="door"></div><div class="step"></div><div class="flagpole"></div><div class="flag"></div>
+<div class="window" style="left:28px"></div><div class="window" style="left:86px"></div>
+<div class="window" style="left:228px"></div><div class="window" style="left:286px"></div>
 </div>
-
-<div class="panel"><b>Демо-вариант</b><br>Потяни сцену мышью или пальцем, чтобы осмотреть макет под разными углами. Это концептуальная 3D-визуализация, а не точная цифровая копия здания.</div>
-
+<div class="tower"><div class="clock"></div></div>
+<div class="tree t1"></div><div class="tree t2"></div><div class="tree t3"></div><div class="tree t4"></div>
+<div class="hotspot h1"></div><div class="hotspot h2"></div><div class="hotspot h3"></div>
+</div>
+</div>
+<div class="panel" id="panel"><b data-i18n="demo">Демо-вариант</b><br/><span data-i18n="panelText">Потяни сцену мышью или пальцем, чтобы осмотреть макет под разными углами. Это концептуальная 3D-визуализация, а не точная цифровая копия здания.</span></div>
 <script>
 const world=document.getElementById('world');
 let down=false, sx=0, sy=0, rz=-8, rx=58;
@@ -85,6 +86,9 @@ world.addEventListener('pointermove',e=>{
   sx=e.clientX;sy=e.clientY;
   world.style.transform=`translate(-50%,-50%) rotateX(${rx}deg) rotateZ(${rz}deg)`;
 });
-</script>
-</body>
+
+const L3={ru:{tourHead:'ВИРТУАЛЬНЫЙ 3D-ОСМОТР',fullName:'Актюбинский юридический институт МВД РК имени М. Букенбаева',back:'← РЕСУРСЫ',sign:'АКТЮБИНСКИЙ ЮРИДИЧЕСКИЙ ИНСТИТУТ МВД РК',demo:'Демо-вариант',panelText:'Потяни сцену мышью или пальцем, чтобы осмотреть макет под разными углами. Это концептуальная 3D-визуализация, а не точная цифровая копия здания.',h1:'Главный корпус',h2:'Учебная зона',h3:'Территория института'},kk:{tourHead:'ВИРТУАЛДЫ 3D-ШОЛУ',fullName:'Қазақстан Республикасы ІІМ М. Бөкенбаев атындағы Ақтөбе заң институты',back:'← РЕСУРСТАР',sign:'ҚР ІІМ АҚТӨБЕ ЗАҢ ИНСТИТУТЫ',demo:'Демо-нұсқа',panelText:'Макетті әртүрлі бұрыштан көру үшін көріністі тінтуірмен немесе саусақпен жылжытыңыз. Бұл — ғимараттың дәл цифрлық көшірмесі емес, тұжырымдамалық 3D-визуализация.',h1:'Бас корпус',h2:'Оқу аймағы',h3:'Институт аумағы'}};
+function setLang3(lang){localStorage.setItem('siteLanguage',lang);document.documentElement.lang=lang==='kk'?'kk':'ru';document.querySelectorAll('[data-i18n]').forEach(e=>e.textContent=L3[lang][e.dataset.i18n]);document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active',b.dataset.lang===lang));const r=document.documentElement.style;r.setProperty('--h1',`"${L3[lang].h1}"`);r.setProperty('--h2',`"${L3[lang].h2}"`);r.setProperty('--h3',`"${L3[lang].h3}"`);document.title=lang==='kk'?'Ақтөбе заң институты — 3D-шолу':'АЮИ МВД РК — 3D-осмотр'}
+document.querySelectorAll('.lang-btn').forEach(b=>b.addEventListener('click',()=>setLang3(b.dataset.lang)));setLang3(localStorage.getItem('siteLanguage')||'ru');
+</script></body>
 </html>
